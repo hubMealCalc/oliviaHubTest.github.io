@@ -66,14 +66,17 @@ function returnNames() {
         alert("Please enter a number less than 30");
     } else {
         document.getElementById("subNumberWeeks").style.display = "none";
+        //creates basic table - no names incl.
         createTable();
         for (i = 0; i < numPeople; i++) {
+            //adds peoples names to an Array to be used later on for table creation
             var title = 'person' + (i + 1);
             var data = document.getElementById(title).value;
             namePeoples.push(data);
         }
 
         for (y = (numPeople - 1); y > -1; y--) {
+            //creates columns for people????
             createCol(namePeoples[y], y);
         }
         document.getElementById('tblCosts').style.display = "block";
@@ -90,11 +93,11 @@ function createTable() {
     for (i = 0; i < numWeeks; i++) {
         var weekNo = i + 1;
         tableToAdd += '<h2>Week ' + weekNo + '</h2><table id="costs' + weekNo + '">';
-        tableToAdd += '<tr id="w' + weekNo + 'titles"><th>Day of Week</th><th>Cost</th><th>No. People</th></tr>';
-        tableToAdd += '<tr id="w' + weekNo + 'mon"><td>Monday</td><td><input type="currency" placeholder="0.00" size="5" min="0.00" max="10000.00" maxlength="6"step="0.01" name="w' + weekNo + 'cost" id="w' + weekNo + 'cost1"></td><td><p id="w' + weekNo + 'people1" class="w' + weekNo + 'people">0</p></td></tr>';
-        tableToAdd += '<tr id="w' + weekNo + 'tues"><td>Tuesday</td><td><input type="currency" placeholder="0.00" size="5" min="0.00" max="10000.00" maxlength="6"step="0.01" name="w' + weekNo + 'cost" id="w' + weekNo + 'cost2"></td><td><p id="w' + weekNo + 'people2" class="w' + weekNo + 'people">0</p></td></tr>';
-        tableToAdd += '<tr id="w' + weekNo + 'wed"><td>Wednesday</td><td><input type="currency" placeholder="0.00" size="5" min="0.00" max="10000.00" maxlength="6"step="0.01" name="w' + weekNo + 'cost" id="w' + weekNo + 'cost3"></td><td><p id="w' + weekNo + 'people3" class="w' + weekNo + 'people">0</p></td></tr>';
-        tableToAdd += '<tr id="w' + weekNo + 'thurs"><td>Thursday</td><td><input type="currency" placeholder="0.00" size="5" min="0.00" max="10000.00" maxlength="6"step="0.01" name="w' + weekNo + 'cost" id="w' + weekNo + 'cost4"></td><td><p id="w' + weekNo + 'people4" class="w' + weekNo + 'people">0</p></td></tr>';
+        tableToAdd += '<tr id="w' + weekNo + 'titles"><th>Day of Week</th><th>Cost</th><th>No. People</th><th>Select all as present</th></tr>';
+        tableToAdd += '<tr id="w' + weekNo + 'mon"><td>Monday</td><td><input type="currency" placeholder="0.00" size="5" min="0.00" max="10000.00" maxlength="6"step="0.01" name="w' + weekNo + 'cost" id="w' + weekNo + 'cost1"></td><td><p id="w' + weekNo + 'people1" class="w' + weekNo + 'people">0</p></td><td><input type="checkbox" id="w' + weekNo + 'all1" onclick="selectAll('+weekNo+' , 1)">Select All</input></td></tr>';
+        tableToAdd += '<tr id="w' + weekNo + 'tues"><td>Tuesday</td><td><input type="currency" placeholder="0.00" size="5" min="0.00" max="10000.00" maxlength="6"step="0.01" name="w' + weekNo + 'cost" id="w' + weekNo + 'cost2"></td><td><p id="w' + weekNo + 'people2" class="w' + weekNo + 'people">0</p></td><td><input type="checkbox" id="w' + weekNo + 'all2" onclick="selectAll('+weekNo+' , 2)">Select All</input></td></tr>';
+        tableToAdd += '<tr id="w' + weekNo + 'wed"><td>Wednesday</td><td><input type="currency" placeholder="0.00" size="5" min="0.00" max="10000.00" maxlength="6"step="0.01" name="w' + weekNo + 'cost" id="w' + weekNo + 'cost3"></td><td><p id="w' + weekNo + 'people3" class="w' + weekNo + 'people">0</p></td><td><input type="checkbox" id="w' + weekNo + 'all3" onclick="selectAll('+weekNo+' , 3)">Select All</input></td></tr>';
+        tableToAdd += '<tr id="w' + weekNo + 'thurs"><td>Thursday</td><td><input type="currency" placeholder="0.00" size="5" min="0.00" max="10000.00" maxlength="6"step="0.01" name="w' + weekNo + 'cost" id="w' + weekNo + 'cost4"></td><td><p id="w' + weekNo + 'people4" class="w' + weekNo + 'people">0</p></td><td><input type="checkbox" id="w' + weekNo + 'all4" onclick="selectAll('+weekNo+' , 4)">Select All</input></td></tr>';
         tableToAdd += '</table>';
 
         tableToAdd += ' <br></br>';
@@ -107,6 +110,17 @@ function createTable() {
     document.getElementById('tblCosts').innerHTML += '<input type="button" class="btn" value="Submit" onclick="costMeals();" />';
 }
 
+function selectAll(week, day){
+    var peoplePres = document.getElementsByClassName('w'+week+'present'+day);
+   
+    if(peoplePres.length !=0){
+        for(i=0;i<peoplePres.length;i++){
+            peoplePres[i].checked = true;
+        }
+    }
+
+    updatePeople(day, week);
+}
 
 function foodCosts() {
     //per week
@@ -227,24 +241,29 @@ function calcPerPerson() {
 function createCol(name, num) {
     var y = 0;
     while (y < numWeeks) {
+        //gets name of row w1titles - Week 1 Titles of table
         var rowName = "w" + (y + 1) + "titles";
         var row = document.getElementById(rowName);
+        //inserts new column at end of table (adds empty column)
         var x = row.insertCell(3);
 
+        //adds name of person
         x.innerHTML = '<b style="color:black;">' + name + '</b>';
 
+        //gets row titles - to use
         var days = [("w" + (y + 1) + "mon"), ("w" + (y + 1) + "tues"), ("w" + (y + 1) + "wed"), ("w" + (y + 1) + "thurs")];
 
         for (i = 0; i < 4; i++) {
+            //gets row ID
             row = document.getElementById(days[i]);
+            //inserts cell in that row
             var x = row.insertCell(3);
+            //inserts chef and or present into cell as options
             x.innerHTML += '<br><input type="radio" name="w' + (y + 1) + 'chef' + (i + 1) + '" value="w' + (y + 1) + 'chef' + (i + 1) + '" onclick="selectPres(' + num + ',' + (i + 1) + ', ' + (y + 1) + ');" id="w' + (y + 1) + 'chef' + (i + 1) + name + '"/>Chef?';
-            x.innerHTML += '<br><input type="checkbox" name="w' + (y + 1) + 'present' + (i + 1) + '" value="w' + (y + 1) + 'present' + (i + 1) + '" onclick="updatePeople(' + (i + 1) + ', ' + (y + 1) + ');" id="w' + (y + 1) + 'present' + (i + 1) + name + '"/>Present?';
+            x.innerHTML += '<br><input type="checkbox" name="w' + (y + 1) + 'present' + (i + 1) + '" value="w' + (y + 1) + 'present' + (i + 1) + '" onclick="updatePeople(' + (i + 1) + ', ' + (y + 1) + ');" id="w' + (y + 1) + 'present' + (i + 1) + name + '" class="w' + (y + 1) + 'present' + (i + 1)+'"/>Present?';
         }
         y++;
     }
-
-
 
 }
 

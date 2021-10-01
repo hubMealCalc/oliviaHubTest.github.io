@@ -9,14 +9,18 @@ td, th{
     border:solid black 1px;
     padding:10px;
     color:black;
+    font-size:100%;
+    overflow: hidden;
+    
 }
 
 table {
+    table-layout:fixed;
     border-collapse: collapse;
     margin-left: auto;
     margin-right:auto;
     color:black;
-    
+    width:100%;
 }
 
 .owes{
@@ -37,7 +41,7 @@ table {
     text-align: center;
     margin-left: auto;
     margin-right:auto;
-    width:80%;
+    width:90%;
     background-color:white;
     
 }
